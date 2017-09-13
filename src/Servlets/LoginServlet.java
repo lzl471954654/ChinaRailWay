@@ -7,7 +7,6 @@ import Utils.LogUtils;
 import net.sf.json.JSONObject;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +28,7 @@ public class LoginServlet extends HttpServlet {
             set = jdbcUtils.Query(sql);
             JSONObject object;
             String json;
-            if(set==null&&set.wasNull()&&!set.next()){
+            if(set==null||set.wasNull()){
                 ResponseSingleData<String> data = new ResponseSingleData<>(0,"null");
                 object = JSONObject.fromObject(data);
                 json = object.toString();
@@ -39,14 +38,29 @@ public class LoginServlet extends HttpServlet {
                 String uName = set.getString("UName");
                 int roleId = set.getInt("roleID");
                 int state = set.getInt("State");
-                Users users = new Users(uid,uName,roleId,state);
-                ResponseSingleData<Users> data = new ResponseSingleData<>(1,users);
-                object = JSONObject.fromObject(data);
-                json = object.toString();
+                set.close();
+
+                sql = "select * from roles where roleId = '"+roleId+"'";
+                set = jdbcUtils.Query(sql);
+                if(set==null||set.wasNull()){
+                    ResponseSingleData<String> data = new ResponseSingleData<>(0,"null");
+                    object = JSONObject.fromObject(data);
+                    json = object.toString();
+                }else {
+                    set.first();
+                    String roleName = set.getString("roleName");
+                    String priv = set.getString("priv");
+                    Users users = new Users(uid,uName,roleName,priv,roleId,state);
+                    ResponseSingleData<Users> data = new ResponseSingleData<>(1,users);
+                    object = JSONObject.fromObject(data);
+                    json = object.toString();
+                }
             }
             resp.setContentType("text/json;charset=UTF-8");
             //resp.setCharacterEncoding("UTF-8");
             resp.getWriter().println(json);
+            if(set!=null)
+                set.close();
         }catch (SQLException e){
             e.printStackTrace();
             LogUtils.logException(getClass().getName(),e.getMessage()+"");

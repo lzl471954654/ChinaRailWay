@@ -5,16 +5,36 @@ import java.io.Serializable;
 public class Users implements Serializable {
     String uid;
     String Uname;
+    String roleName;
+    String priv;
     int roleId;
     int state;
 
     public Users(){}
 
-    public Users(String uid, String uname, int roleId, int state) {
+    public Users(String uid, String uname, String roleName, String priv, int roleId, int state) {
         this.uid = uid;
         Uname = uname;
+        this.roleName = roleName;
+        this.priv = priv;
         this.roleId = roleId;
         this.state = state;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public String getPriv() {
+        return priv;
+    }
+
+    public void setPriv(String priv) {
+        this.priv = priv;
     }
 
     public String getUid() {
