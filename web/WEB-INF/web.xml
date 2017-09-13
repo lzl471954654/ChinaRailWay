@@ -12,4 +12,13 @@
         <servlet-name>Login</servlet-name>
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>BridgeSearch</servlet-name>
+        <servlet-class>Servlets.BridgeSearch</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BridgeSearch</servlet-name>
+        <url-pattern>/searchBridge</url-pattern>
+    </servlet-mapping>
 </web-app>
