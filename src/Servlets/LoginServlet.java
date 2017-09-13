@@ -2,17 +2,20 @@ package Servlets;
 
 import DataBaseClasses.JdbcUtils;
 import DataClass.ResponseSingleData;
+import DataClass.TokenMap;
 import DataClass.Users;
 import Utils.LogUtils;
 import net.sf.json.JSONObject;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.UUID;
 
 
 public class LoginServlet extends HttpServlet {
@@ -54,6 +57,10 @@ public class LoginServlet extends HttpServlet {
                     ResponseSingleData<Users> data = new ResponseSingleData<>(1,users);
                     object = JSONObject.fromObject(data);
                     json = object.toString();
+                    String tokenValue = UUID.randomUUID().toString();
+                    Cookie cookie = new Cookie("token",tokenValue);
+                    resp.addCookie(cookie);
+                    TokenMap.addUser(uid,tokenValue);
                 }
             }
             resp.setContentType("text/json;charset=UTF-8");
