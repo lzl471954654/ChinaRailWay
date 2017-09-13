@@ -11,10 +11,12 @@ object TokenMap {
         return map.containsKey(id)
     }
     @JvmStatic
-    fun verifyUser(id: String,tokenValue: String): Boolean {
+    fun verifyUser(id: String?,tokenValue: String?): Boolean {
+        if(id==null || tokenValue == null)
+            return false
         if(!containsUser(id))
             return false
-        return map[id]!! == Token(tokenValue,System.currentTimeMillis())
+        return map[id]!! == Token(tokenValue!!,System.currentTimeMillis())
     }
     @JvmStatic
     fun addUser(id: String,tokenValue:String){
