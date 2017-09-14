@@ -163,7 +163,7 @@ code类型|说明|
 -2|表明权限拒绝|
 -1|表明参数错误|
 0|代表无数据|
- 大于等于1|代表数据的个数|
+大于等于1|代表数据的个数|
 
 data类型|说明|
 -|-|
@@ -227,3 +227,75 @@ data类型|说明|
 }
 
 ```
+
+## 四、组合查询
+
+#### 请求方式：POST/GET
+#### URL：url/search
+#### 请求参数
+
+参数名 | 类型 | 示例 | 说明|
+-------|------|------|-----|
+uid | String |xxxxx|用户名|
+type| String||下面详解|
+searchType|String|bName，bID|以什么方式查询，查询类型|
+searchParam|String|柳沟村大桥（根据searchType来决定）|实际的查询参数|
+searchAll|String|1或0|下面详解|
+
+
+type类型|说明|
+--------|----|
+beam|梁板查询|
+bridge|桥查询|
+buildPlan|架梁计划查询|
+task|生产计划查询|
+checkRec|检测记录|
+factory|梁场查询|
+files|文件查询|
+makePosition|制梁台座|
+model|模型|
+monthData|月结|
+store|库存|
+storePosition|存梁台座|
+
+
+searchAll类型|
+-----|
+0，按条件查询|
+当searchAll=1，searchType和searchParam参数不起作用，自动返回所有信息|
+
+searchType的类型|说明|
+----------|--------|
+bName |桥名|
+bID |梁编号|
+name|梁场名称|
+BuildID|计划编号|
+date|日期
+MakePosID|制梁台号|
+pos|位置|
+PedID|台号|
+ID| 模型ID|
+sDate|年月|
+
+**注意需要在请求头中放入，在登陆成功时获得的Token，在Cookie中获取**
+
+#### 返回参数
+
+参数名 | 类型 | 示例 | 说明|
+-------|------|------|-----|
+code | int || 下面详解|
+data |  | |下面详解|
+
+code类型|说明|
+------|---|
+-2|表明权限拒绝|
+-1|表明参数错误|
+0|代表无数据|
+大于等于1|代表数据的个数|
+
+data类型|说明|
+-|-|
+当code=-2，String|权限拒绝信息|
+当code=-1，String|返回参数错误信息|
+当code=0， String|返回无数据信息|
+当code>=1，json|返回具体的数据|
