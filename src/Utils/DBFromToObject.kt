@@ -3,8 +3,18 @@ package Utils
 import java.math.BigDecimal
 import java.sql.Date
 import java.sql.ResultSet
+import java.util.*
+import kotlin.collections.ArrayList
 
 object DBFromToObject {
+
+    fun<T> converToObjectArray(set: ResultSet,clazz: Class<T>):LinkedList<T>{
+        val array = LinkedList<T>()
+        while (set.next()){
+            array.add(convertToObject(set,clazz))
+        }
+        return array
+    }
 
     fun<T> convertToObject(set:ResultSet,clazz: Class<T>):T{
         val data = clazz.newInstance()

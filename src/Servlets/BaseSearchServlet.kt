@@ -31,4 +31,19 @@ open class BaseSearchServlet:HttpServlet() {
             searchAll = req?.getParameter("searchAll")
     }
 
+    companion object {
+        val factoryForm = "factory"
+        val buildPlanForm = "buildplan"
+        val filesForm = "files"
+        val monthdataForm = "monthdata"
+        val modelForm = "model"
+        val checkRecForm = "checkrec"
+        val beamForm = "beam"
+        val bridgeForm = "bridge"
+        val makepositionForm = "makeposition"
+        val storeForm = "store"
+        val storepositionFrom = "storeposition"
+        val taskForm = "task"
+    }
+
 }
