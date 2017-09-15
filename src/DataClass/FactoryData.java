@@ -6,7 +6,7 @@ import java.sql.Date;
 public class FactoryData {
     String name;
     String project;
-    String segement;
+    String segment;
     String code;
     String manager;
     String phone;
@@ -49,12 +49,12 @@ public class FactoryData {
         this.project = project;
     }
 
-    public String getSegement() {
-        return segement;
+    public String getSegment() {
+        return segment;
     }
 
-    public void setSegement(String segement) {
-        this.segement = segement;
+    public void setSegment(String segement) {
+        this.segment = segement;
     }
 
     public String getCode() {

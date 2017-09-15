@@ -23,7 +23,7 @@ open class BaseSearchServlet:HttpServlet() {
             loginFlag = TokenMap.verifyUser(uid!!,tokenValue!!)
             resp?.contentType = "text/json;charset=UTF-8"
             if (!loginFlag){
-                val data = ResponseSingleData<String>(0,"Permission denied")
+                val data = ResponseSingleData<String>(-2,"Permission denied")
                 resp?.writer?.println(JSONObject.fromObject(data).toString())
             }
             searchType = req?.getParameter("searchType")
