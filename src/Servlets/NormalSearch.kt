@@ -51,7 +51,7 @@ class NormalSearch:BaseSearchServlet() {
             searchAllInfo(clazz)
             return
         }
-        val sql = "select * from $type where $searchType = $searchParam"
+        val sql = "select * from $type where $searchType = '$searchParam'"
         val jdbc = JdbcUtils()
         val set = jdbc.Query(sql)
         if(!set.next()){
