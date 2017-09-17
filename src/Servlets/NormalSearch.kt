@@ -4,6 +4,7 @@ import DataBaseClasses.JdbcUtils
 import DataClass.*
 import Utils.DBFromToObject
 import Utils.SendUtils
+import com.google.gson.Gson
 import net.sf.json.JSONArray
 import net.sf.json.JSONObject
 import javax.servlet.annotation.WebServlet
@@ -73,7 +74,7 @@ class NormalSearch:BaseSearchServlet() {
         }
         set.beforeFirst()
         val listData = DBFromToObject.converToObjectArray(set,clazz)
-        SendUtils.sendMsg(listData.size,JSONArray.fromObject(listData).toString(),resp)
+        SendUtils.sendMsg(listData.size, Gson().toJson(listData),resp)
     }
 
 

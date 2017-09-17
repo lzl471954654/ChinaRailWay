@@ -1,6 +1,7 @@
 package Utils
 
 import DataClass.ResponseSingleData
+import com.google.gson.Gson
 import net.sf.json.JSONObject
 import javax.servlet.http.HttpServletResponse
 
