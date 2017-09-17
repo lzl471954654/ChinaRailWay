@@ -3,6 +3,8 @@ package Servlets
 import DataClass.ResponseSingleData
 import DataClass.TokenMap
 import net.sf.json.JSONObject
+import java.net.URLDecoder
+import java.net.URLEncoder
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -29,6 +31,8 @@ open class BaseSearchServlet:HttpServlet() {
             searchType = req?.getParameter("searchType")
             searchParam =req?.getParameter("searchParam")
             searchAll = req?.getParameter("searchAll")
+            if(searchParam!=null)
+                searchParam = URLDecoder.decode(searchParam,"UTF-8")
     }
 
     companion object {
