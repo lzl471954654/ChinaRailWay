@@ -61,7 +61,7 @@ class NormalSearch:BaseSearchServlet() {
         }
         set.beforeFirst()
         val listData = DBFromToObject.converToObjectArray(set,clazz)
-        SendUtils.sendMsg(listData.size,JSONArray.fromObject(listData).toString(),resp)
+        SendUtils.sendMsg(listData.size,Gson().toJson(listData),resp)
     }
 
     fun <T>searchAllInfo(clazz: Class<T>){
