@@ -3,19 +3,19 @@ package DataClass;
 import java.io.Serializable;
 
 public class ResponseSingleData<T> implements Serializable {
-    int code;
+    long code;
     T data;
 
-    public ResponseSingleData(int code, T data) {
+    public ResponseSingleData(long code, T data) {
         this.code = code;
         this.data = data;
     }
 
-    public int getCode() {
+    public long getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(long code) {
         this.code = code;
     }
 

@@ -12,7 +12,12 @@ object SendUtils {
     }
 
     fun sendMsg(code: Int,msg: String,resp: HttpServletResponse?){
-        val data = ResponseSingleData<String>(code,msg)
+        val data = ResponseSingleData<String>(code.toLong(),msg)
+        resp?.writer?.println(JSONObject.fromObject(data).toString())
+    }
+
+    fun sendFileUploadMsg(code : Long,resp: HttpServletResponse?){
+        val data = ResponseSingleData<String>(code,"")
         resp?.writer?.println(JSONObject.fromObject(data).toString())
     }
 }
