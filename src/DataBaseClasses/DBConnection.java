@@ -87,7 +87,7 @@ public class DBConnection {
     {
         try
         {
-            if(connection==null)
+            if(connection!=null)
                 connection.close();
             connection = null;
             System.out.println("关闭数据库连接成功！");
