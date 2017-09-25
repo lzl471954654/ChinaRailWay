@@ -6,11 +6,13 @@ public class CheckRecData {
     String bName;
     String bID;
     BigDecimal rLen;
+    BigDecimal rDown;
     BigDecimal rTop;
     BigDecimal rBottom;
     BigDecimal rHeight;
-    BigDecimal proTop;
     BigDecimal proDown;
+    BigDecimal proTop;
+    BigDecimal proBottom;
     BigDecimal smooth;
     BigDecimal upWard;
     BigDecimal lls;
@@ -26,6 +28,22 @@ public class CheckRecData {
     BigDecimal topRation;
 
     public CheckRecData(){}
+
+    public BigDecimal getrDown() {
+        return rDown;
+    }
+
+    public void setrDown(BigDecimal rDown) {
+        this.rDown = rDown;
+    }
+
+    public BigDecimal getProBottom() {
+        return proBottom;
+    }
+
+    public void setProBottom(BigDecimal proBottom) {
+        this.proBottom = proBottom;
+    }
 
     public String getbName() {
         return bName;

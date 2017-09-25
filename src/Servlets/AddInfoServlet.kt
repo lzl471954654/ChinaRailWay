@@ -17,6 +17,7 @@ class AddInfoServlet:HttpServlet() {
     override fun service(req: HttpServletRequest?, resp: HttpServletResponse?) {
         val type = req?.getParameter("type")
         var data = req?.getParameter("data")
+
         resp?.contentType = "text/json;charset=UTF-8"
         if (type==null||data==null){
             SendUtils.sendParamError("${if (type==null) "type" else "data"} is null",resp)

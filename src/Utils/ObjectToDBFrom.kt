@@ -19,16 +19,16 @@ object ObjectToDBFrom {
                     builder.append(" $data ,")
                 }
                 String::class.java->{
-                    val data = it.get(srcObject) as String
-                    builder.append(" '$data' ,")
+                    val data = it.get(srcObject) as String?
+                    builder.append(" ${if (data==null) null else "'$data'"} ,")
                 }
                 Short::class.java->{
                     val data = it.getShort(srcObject)
                     builder.append(" $data ,")
                 }
                 BigDecimal::class.java->{
-                    val data = it.get(srcObject) as BigDecimal
-                    builder.append(" ${data.toDouble()} ,")
+                    val data = it.get(srcObject) as BigDecimal?
+                    builder.append(" ${data?.toDouble()} ,")
                 }
                 Double::class.java->{
                     val data = it.getDouble(srcObject)
@@ -47,9 +47,13 @@ object ObjectToDBFrom {
                     builder.append(" $data ,")
                 }
                 java.util.Date::class.java->{
-                    val data = it.get(srcObject) as java.util.Date
-                    val date = Date(data.time)
-                    builder.append(" '$date' ,")
+                    val data = it.get(srcObject) as java.util.Date?
+                    if(data!=null){
+                        val date = Date(data.time)
+                        builder.append(" '$date' ,")
+                    }
+                    else
+                        builder.append(" null ,")
                 }
                 else->{
                     val data = it.get(srcObject)
