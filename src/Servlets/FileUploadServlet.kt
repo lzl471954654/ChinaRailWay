@@ -1,5 +1,6 @@
 package Servlets
 
+import DataBaseClasses.JdbcUtils
 import Utils.SendUtils
 import java.io.File
 import java.io.FileOutputStream
@@ -14,6 +15,8 @@ class FileUploadServlet:HttpServlet() {
         val type = req?.getHeader("FileType")
         val fileName = req?.getHeader("FileName")
         val fileSuffix = req?.getHeader("FileSuffix")
+        val bID = req?.getParameter("bID")
+        val bName = req?.getParameter("bName")
         var filePath = ""
         if(type == "image")
             filePath = imageDirPath
@@ -47,7 +50,17 @@ class FileUploadServlet:HttpServlet() {
             fileOutput.write(byte,0,count)
         }
         fileOutput.close()
-        SendUtils.sendFileUploadMsg(size,resp)
+        val fileId:Int = (System.currentTimeMillis()+file.hashCode().toLong()).hashCode()
+        val sql = "insert into files values( '$fileId' , '$bID' , '$bName' , '${file.name}' , '$type' , '${file.absolutePath}' "
+        val jdbcUtils = JdbcUtils()
+        val result:Long = jdbcUtils.update(sql)
+        if(result>0){
+            SendUtils.sendFileUploadMsg(size,resp)
+        }else{
+            SendUtils.sendMsg(-1,"上传失败!",resp)
+            if (file.exists())
+                file.delete()
+        }
     }
 
     override fun doGet(req: HttpServletRequest?, resp: HttpServletResponse?) {
