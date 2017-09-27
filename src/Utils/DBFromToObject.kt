@@ -38,7 +38,11 @@ object DBFromToObject {
                     it.set(data,set.getLong(it.name))
                 }
                 String::class.java->{
-                    it.set(data,set.getString(it.name))
+                    val data1 = set.getString(it.name)
+                    if(data1 == "null")
+                        it.set(data,null)
+                    else
+                        it.set(data,data1)
                 }
                 BigDecimal::class.java->{
                     it.set(data,set.getBigDecimal(it.name))

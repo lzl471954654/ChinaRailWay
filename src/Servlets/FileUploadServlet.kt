@@ -4,6 +4,7 @@ import DataBaseClasses.JdbcUtils
 import Utils.SendUtils
 import java.io.File
 import java.io.FileOutputStream
+import java.net.URLDecoder
 import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
@@ -13,11 +14,19 @@ import javax.servlet.http.HttpServletResponse
 class FileUploadServlet:HttpServlet() {
     override fun doPost(req: HttpServletRequest?, resp: HttpServletResponse?) {
         val type = req?.getHeader("FileType")
-        val fileName = req?.getHeader("FileName")
+        var fileName = req?.getHeader("FileName")
         val fileSuffix = req?.getHeader("FileSuffix")
-        val bID = req?.getParameter("bID")
-        val bName = req?.getParameter("bName")
+        var bID = req?.getHeader("bID")
+        var bName = req?.getHeader("bName")
         var filePath = ""
+
+        fileName = URLDecoder.decode(fileName,"UTF-8")
+        bName = URLDecoder.decode(bName,"UTF-8")
+
+        resp?.contentType = "text/json;charset=UTF-8"
+
+
+        val fileId:Int = (System.currentTimeMillis()+fileName!!.hashCode().toLong()).hashCode()
         if(type == "image")
             filePath = imageDirPath
         else if (type == "video")
@@ -26,9 +35,21 @@ class FileUploadServlet:HttpServlet() {
             SendUtils.sendParamError("FileType",resp)
             return
         }
-        filePath = filePath + File.separator + fileName + "." +fileSuffix
+        filePath = filePath + File.separator + fileId + "." +fileSuffix
         val file = File(filePath)
         println("filePath :\t"+file.absolutePath)
+        if(!srcDirFile.exists())
+        {
+            srcDirFile.mkdir()
+            imageDirFile.mkdir()
+            videoDirFile.mkdir()
+        }
+        else{
+            if(!imageDirFile.exists())
+                imageDirFile.mkdir()
+            if(!videoDirFile.exists())
+                videoDirFile.mkdir()
+        }
         if (!file.exists()){
             file.createNewFile()
         }
@@ -50,8 +71,11 @@ class FileUploadServlet:HttpServlet() {
             fileOutput.write(byte,0,count)
         }
         fileOutput.close()
-        val fileId:Int = (System.currentTimeMillis()+file.hashCode().toLong()).hashCode()
-        val sql = "insert into files values( '$fileId' , '$bID' , '$bName' , '${file.name}' , '$type' , '${file.absolutePath}' "
+
+
+        val sql = "insert into files values( '$fileId' , '$bID' , '$bName' , '${file.name}' , '$type' , '${file.absolutePath}' )"
+
+        println("FileSql :$sql")
         val jdbcUtils = JdbcUtils()
         val result:Long = jdbcUtils.update(sql)
         if(result>0){
@@ -68,7 +92,12 @@ class FileUploadServlet:HttpServlet() {
     }
 
     companion object {
-        val imageDirPath = "/accept/images"
-        val videoDirPath = "/accept/video"
+        val srcRoot = "/accept"
+        val imageDirPath = "$srcRoot/images"
+        val videoDirPath = "$srcRoot/video"
+
+        val srcDirFile = File(srcRoot)
+        val imageDirFile = File(imageDirPath)
+        val videoDirFile = File(videoDirPath)
     }
 }

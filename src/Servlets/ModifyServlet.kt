@@ -16,7 +16,7 @@ class ModifyServlet : HttpServlet() {
         var primaryKeyParam = req?.getParameter("pk")
         var modifyData = req?.getParameter("modifyData")
         resp?.contentType = "text/json;charset=UTF-8"
-        if(!testNullOrEmpty(type,primaryKeyParam,modifyData)){
+        if(!testParamNullOrEmpty(type,primaryKeyParam,modifyData)){
             SendUtils.sendParamError("Some param is NULL",resp)
             return
         }
@@ -47,15 +47,15 @@ class ModifyServlet : HttpServlet() {
             SendUtils.sendMsg(-1,"修改失败",resp)
         }
     }
+}
 
-    fun testNullOrEmpty(vararg param: String?):Boolean {
-        var flag = true
-        param.forEach {
-            if (it == null || it == "") {
-                flag = false
-                return@forEach
-            }
+fun HttpServlet.testParamNullOrEmpty(vararg param:String?):Boolean{
+    var flag = true
+    param.forEach {
+        if (it == null || it == "") {
+            flag = false
+            return@forEach
         }
-        return flag
     }
+    return flag
 }
