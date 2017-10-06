@@ -2,19 +2,22 @@ package DataBaseClasses;
 
 import Utils.LogUtils;
 
+import java.io.File;
+import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * Created by LZL on 2017/7/13.
  */
 public class DBConnection {
     private  static String DB_Driver = "com.mysql.jdbc.Driver";
-    private static String url = "jdbc:mysql://222.24.63.119:3306/crbf";
-    //private String url = "jdbc:mysql://139.199.20.248:3306/wanxiyou";
-    private static String user = "cradmin";
-    private static String password = "HelloMySQL2017;";
+    //private static String url = "jdbc:mysql://222.24.63.119:3306/crbf";
+    private static String url = "jdbc:mysql://127.0.0.1:3306/crbf";
+    private static String user = "root";
+    private static String password = "lzl471954654";
     private  Connection connection = null;
     private static String tag = "DBConnection";
     static
