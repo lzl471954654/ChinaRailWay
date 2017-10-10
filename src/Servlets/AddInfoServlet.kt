@@ -24,7 +24,7 @@ class AddInfoServlet:HttpServlet() {
             return
         }
         data = URLDecoder.decode(data,"UTF-8")
-        when(type){
+        when(type.toLowerCase()){
             BaseSearchServlet.storepositionFrom->{
                 dealData(ObjectToDBFrom.gson.fromJson(data,StorePositionData::class.java),type,resp)
             }

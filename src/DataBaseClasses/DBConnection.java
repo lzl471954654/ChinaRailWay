@@ -18,6 +18,9 @@ public class DBConnection {
     private static String url = "jdbc:mysql://127.0.0.1:3306/crbf";
     private static String user = "root";
     private static String password = "lzl471954654";
+     /*private static String user = "cradmin";
+     private static String password = "HelloMySQL2017;";
+     private static String url = "jdbc:mysql://222.24.63.119:3306/crbf";*/
     private  Connection connection = null;
     private static String tag = "DBConnection";
     static
