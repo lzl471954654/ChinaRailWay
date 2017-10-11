@@ -3,6 +3,8 @@
 ## 一级URL
 url：http://139.199.20.248:8080/ChinaRailWay
 
+**注意：接口中所有包含中文的参数，提交前请使用URLEncoder进行编码，编码格式UTF-8**
+
 
 ## 一、登陆接口
 #### 请求方式：GET/POST
@@ -299,3 +301,267 @@ data类型|说明|
 当code=-1，String|返回参数错误信息|
 当code=0， String|返回无数据信息|
 当code>=1，json|返回具体的数据|
+
+
+## 五、上传文件
+
+#### 请求方式：POST
+#### URL：url/fileUpload
+#### 请求参数
+
+参数名 | 类型 | 示例 | 说明|
+-------|------|------|-----|
+bID | String |1|梁板编号|
+bName| String|二郎岔纵向桥|桥名|
+
+#### 请求头参数
+参数名 | 类型 | 示例 | 说明|
+-------|------|------|-----|
+FileType | String |image或video|文件类型|
+FileName| String|2017-5-5-大桥-1梁板|文件名|
+FileSuffix|String|jpg|文件名后缀|
+
+#### 返回参数
+
+参数名 | 类型 | 示例 | 说明|
+-------|------|------|-----|
+code | int || 下面详解|
+data |  String| |返回错误信息详情|
+
+code类型|说明|
+------|---|
+-1|上传失败|
+大于等于0|代表上传成功，代表文件大小|
+
+
+## 六、增加数据
+
+#### 请求方式：POST
+#### URL：url/addInfo
+#### 请求参数
+
+参数名 | 类型 | 示例 | 说明|
+-------|------|------|-----|
+type | String |beam|增加的表名|
+data| json||该表的数据json|
+
+
+##### 参数 type类型说明
+
+type类型|说明|
+--------|----|
+beam|梁板|
+bridge|桥|
+buildPlan|架梁计划|
+task|生产计划|
+checkRec|检测记录|
+factory|梁场|
+files|文件|
+makePosition|制梁台座|
+model|模型|
+monthData|月结|
+store|库存|
+storePosition|存梁台座|
+
+
+#### 返回参数
+
+参数名 | 类型 | 示例 | 说明|
+-------|------|------|-----|
+code | int || 1成功，-1失败|
+data |  String| 参数错误等|返回错误信息详情|
+
+
+## 七、修改数据
+
+#### 请求方式：POST
+#### URL：url/modify
+#### 请求参数
+
+参数名 | 类型 | 示例 | 说明|
+-------|------|------|-----|
+type | String ||表的类型|
+pk| json||被修改数据的主键和外键|
+modifyData|json|下面详解|修改的数据json|
+
+
+##### 参数 type类型说明
+
+type类型|说明|
+--------|----|
+beam|梁板|
+bridge|桥|
+buildPlan|架梁计划|
+task|生产计划|
+checkRec|检测记录|
+factory|梁场|
+files|文件|
+makePosition|制梁台座|
+model|模型|
+monthData|月结|
+store|库存|
+storePosition|存梁台座|
+
+
+##### 参数 pk类型说明
+
+一个数组
+其中以name为主键外键名称，data为主键外键的值
+
+```json
+
+[
+    {
+        "data": "2",
+        "name": "id"
+    },
+    {
+        "data": "1",
+        "name": "bid"
+    },
+    {
+        "data": "二郎岔纵向桥",
+        "name": "bName"
+    }
+]
+
+```
+
+##### 参数modifyData类型说明
+
+name为，被修改数据的字段名，data为该字段名的数据
+
+```json
+
+[
+    {
+        "data": "lzl",
+        "name": "name"
+    }
+]
+
+```
+
+#### 返回参数
+
+参数名 | 类型 | 示例 | 说明|
+-------|------|------|-----|
+code | int || 大于等于1成功，-1失败|
+data |  String| 参数错误等|返回错误信息详情|
+
+code为-1表示修改失败，请检查参数，code>=1表示成功修改的条数
+
+
+## 八、文件查询
+
+#### 请求方式：POST
+#### URL：url/fileSearch
+#### 请求参数
+
+参数名 | 类型 | 示例 | 说明|
+-------|------|------|-----|
+bID| String ||梁编号|
+bName| String|| 桥名 |
+
+
+#### 返回参数
+
+参数名 | 类型 | 示例 | 说明|
+-------|------|------|-----|
+code | int || 大于等于1成功，-1失败|
+data |  String| |下面详解|
+
+code为-1表示修改失败，请检查参数，code = 0 代表没有数据，code>=1表示查询到的文件总数
+
+code = -1 时 data为错误信息，code>=1时 data为json格式数据
+
+data是一个Array
+
+|参数名|解释|
+|-|-|
+|file|文件路径|
+|bName|桥名|
+|bID|梁板编号|
+|id|文件编号|
+|name|文件名，下载文件需要提交文件名|
+|type|文件类型，image图片，video视频|
+返回数据示例
+```json
+{
+    "code": 5,
+    "data": [
+        {
+            "file": "C:acceptimages-2005249296.png",
+            "bName": "二郎岔纵向桥",
+            "name": "-2005249296.png",
+            "id": -2005249296,
+            "bID": "1",
+            "type": "image"
+        },
+        {
+            "file": "D:acceptimages-1830519012.png",
+            "bName": "二郎岔纵向桥",
+            "name": "-1830519012.png",
+            "id": -1830519012,
+            "bID": "1",
+            "type": "image"
+        },
+        {
+            "bName": "二郎岔纵向桥",
+            "name": "lzl",
+            "id": 2,
+            "bID": "1"
+        },
+        {
+            "file": "accpet1.jgp",
+            "bName": "二郎岔纵向桥",
+            "name": "nameiswjb",
+            "id": 123,
+            "bID": "1",
+            "type": "jpg"
+        },
+        {
+            "file": "accpet1.jgp",
+            "bName": "二郎岔纵向桥",
+            "name": "nameiswjb",
+            "id": 1234,
+            "bID": "1"
+        }
+    ]
+}
+```
+
+## 九、文件下载
+
+#### 请求方式：POST
+#### URL：url/download
+#### 请求参数
+
+参数名 | 类型 | 示例 | 说明|
+-------|------|------|-----|
+type| String |image或video|文件类型 image图片，video视频|
+fileName| String|xxx.jpg| 文件名 |
+
+fileName 文件名，需要通过使用文件查询接口，查询结果中的文件名才可以获取文件
+
+#### 返回数据
+返回文件字节，请读入并写入文件即可
+
+## 十、梁板出入场
+
+#### 请求方式：POST
+#### URL：url/changeBeamStatus
+#### 请求参数
+
+参数名 | 类型 | 示例 | 说明|
+-------|------|------|-----|
+type| String |已入库、已出库||
+beamId| String|| 梁板编号 |
+
+
+#### 返回参数
+
+参数名 | 类型 | 示例 | 说明|
+-------|------|------|-----|
+code | int || 1成功，其他失败|
+data |  String| |错误信息|
