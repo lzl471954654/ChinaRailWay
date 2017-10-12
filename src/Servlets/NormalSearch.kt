@@ -39,12 +39,26 @@ class NormalSearch:BaseSearchServlet() {
             storeForm->search(StoreData::class.java)
             storepositionFrom->search(StorePositionData::class.java)
             taskForm->search(TaskData::class.java)
+            "taskWithBeam"->taskWithBeam()
             else->{
                 SendUtils.sendParamError("FormTypeError",resp!!)
                 return
             }
         }
 
+    }
+
+    private fun taskWithBeam(){
+        val sql = "select beam.* , task.* from beam,task where beam.bid = task.bid and beam.bName = task.bName"
+        val jdbc = JdbcUtils()
+        val set = jdbc.Query(sql)
+        if(!set.next()){
+            SendUtils.sendMsg(0,"没有数据",resp)
+            return
+        }
+        set.beforeFirst()
+        val listData = DBFromToObject.converToObjectArray(set,TaskWithBeam::class.java)
+        SendUtils.sendMsg(listData.size, gson.toJson(listData),resp)
     }
 
     fun <T>search(clazz:Class<T>){
@@ -61,7 +75,7 @@ class NormalSearch:BaseSearchServlet() {
         }
         set.beforeFirst()
         val listData = DBFromToObject.converToObjectArray(set,clazz)
-        SendUtils.sendMsg(listData.size,Gson().toJson(listData),resp)
+        SendUtils.sendMsg(listData.size,gson.toJson(listData),resp)
     }
 
     fun <T>searchAllInfo(clazz: Class<T>){

@@ -1,17 +1,17 @@
 package DataClass;
 
 public class MakePosition {
-    String makePosID;
+    int makePosID;
     short size;
     boolean idle;
 
     public MakePosition(){}
 
-    public String getMakePosID() {
+    public int getMakePosID() {
         return makePosID;
     }
 
-    public void setMakePosID(String makePosID) {
+    public void setMakePosID(int makePosID) {
         this.makePosID = makePosID;
     }
 

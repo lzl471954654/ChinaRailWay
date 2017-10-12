@@ -25,10 +25,13 @@ class download:HttpServlet() {
             path = FileUploadServlet.imageDirPath+File.separator+fileName
             resp?.contentType = "image"
         }
-        else
+        else if(type == "video")
         {
             path = FileUploadServlet.videoDirPath+File.separator+fileName
             resp?.contentType = "video/mpeg4"
+        }else{
+            path = FileUploadServlet.srcRoot+File.separator+"factoryImage"+File.separator+fileName
+            resp?.contentType = "image"
         }
 
         val file = File(path)
