@@ -3,6 +3,7 @@ package Servlets
 import DataBaseClasses.JdbcUtils
 import DataClass.FactoryData
 import Utils.SendUtils
+import com.google.gson.GsonBuilder
 import java.io.File
 import java.net.URLDecoder
 import javax.servlet.annotation.WebServlet
@@ -15,24 +16,27 @@ class ModifyFactory:HttpServlet() {
 
     override fun doPost(req: HttpServletRequest?, resp: HttpServletResponse?) {
         var data = req?.getParameter("data")
-        if(testParamNullOrEmpty(data)){
+        if(!testParamNullOrEmpty(data)){
             SendUtils.sendMsg(-1,"data",resp)
             return
         }
         data = URLDecoder.decode(data,"UTF-8")
-        val dataObject = BaseSearchServlet.gson.fromJson(data,FactoryData::class.java)
+        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
+        val dataObject = gson.fromJson(data,FactoryData::class.java)
         val fileName = dataObject.name +".jpg"
-        val clazz = fileName.javaClass
+        val clazz = FactoryData::class.java
         val builder = StringBuilder()
         builder.append(" update factory set ")
         clazz.declaredFields.forEach {
+            it.isAccessible = true
             if(it.name!="name"){
-                it.isAccessible = true
-                builder.append(" ${it.name} = '${it.get(dataObject).toString()}', ")
+                val name = it.name
+                val data = it.get(dataObject).toString()
+                builder.append(" $name = '$data', ")
             }
         }
         builder.delete(builder.length-2,builder.length)
-        builder.append(" where name = ${dataObject.name}")
+        builder.append(" where name = '${dataObject.name}' ")
         val sql = builder.toString()
         println("modifySQL is :$sql")
         val jdbc = JdbcUtils()
@@ -52,7 +56,7 @@ class ModifyFactory:HttpServlet() {
             var out = file.outputStream()
             var input = req!!.inputStream
             val bytes = ByteArray(4096)
-            var count = 0
+            var count: Int
             while(true){
                 count = input.read(bytes)
                 if(count==-1){
@@ -60,6 +64,8 @@ class ModifyFactory:HttpServlet() {
                 }
                 out.write(bytes,0,count)
             }
+            out.flush()
+            out.close()
             SendUtils.sendMsg(result.toInt(),"成功",resp)
         }else{
             SendUtils.sendMsg(-1,"失败",resp)

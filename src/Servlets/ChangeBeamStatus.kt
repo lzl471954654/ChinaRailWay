@@ -19,7 +19,7 @@ class ChangeBeamStatus : HttpServlet() {
         var type = req?.getParameter("type")
         val beamId = req?.getParameter("beamId")
         val bName = req?.getParameter("bName")
-        if (testParamNullOrEmpty(type, beamId,bName)) {
+        if (!testParamNullOrEmpty(type, beamId,bName)) {
             SendUtils.sendParamError("null", resp)
             return
         }
@@ -36,6 +36,7 @@ class ChangeBeamStatus : HttpServlet() {
             val plan = DBFromToObject.convertToObject(result,TaskData::class.java)
             var sql = ""
             var changeStoreSQL = ""
+            var changeBeamSQL = ""
             if(type == inFactory){
                 /*
                 * 梁板入场
@@ -44,6 +45,7 @@ class ChangeBeamStatus : HttpServlet() {
                 * */
                 sql = " update ${BaseSearchServlet.makepositionForm} set Idle = '${1}' where makePosID = '${plan.makePosId}'"
                 changeStoreSQL = " insert into ${BaseSearchServlet.storeForm} values ( '$bName' , '$beamId' , '${plan.pedID}' , '${plan.pos}' , '${simpleDataFormatter.format(Date(System.currentTimeMillis()))}' , null )"
+                changeBeamSQL = " update ${BaseSearchServlet.beamForm} set status = '已入场' where bName = '$bName' and bId = '$beamId'"
             }else{
                 /*
                 * 梁板出场
@@ -52,10 +54,14 @@ class ChangeBeamStatus : HttpServlet() {
                 * */
                 sql = " update ${BaseSearchServlet.storepositionFrom} set status = $empty where pedId = '${plan.pedID}' and pos = '${plan.pos}'"
                 changeStoreSQL = " update ${BaseSearchServlet.storeForm} set outTime = '${simpleDataFormatter.format(Date(System.currentTimeMillis()))}' where bName = $bName and bId = $beamId "
+                changeBeamSQL = " update ${BaseSearchServlet.beamForm} set status = '已出场' where bName = '$bName' and bId = '$beamId'"
             }
             var resultCode = jdbc.update(sql)
             resultCode = if(resultCode==1L){
-                jdbc.update(changeStoreSQL)
+                if (jdbc.update(changeStoreSQL)==1L){
+                    jdbc.update(changeBeamSQL)
+                }else
+                    -1
             }else{
                 -1
             }

@@ -7,6 +7,9 @@ import Utils.SendUtils
 import com.google.gson.Gson
 import net.sf.json.JSONArray
 import net.sf.json.JSONObject
+import sun.util.resources.cldr.ebu.CalendarData_ebu_KE
+import java.sql.Date
+import java.util.*
 import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -30,7 +33,7 @@ class NormalSearch:BaseSearchServlet() {
             factoryForm->search(FactoryData::class.java)
             beamForm->search(BeamData::class.java)
             bridgeForm->search(BridgeData::class.java)
-            buildPlanForm->search(BuildPlan::class.java)
+            buildPlanForm->makePlanTask()
             checkRecForm->search(CheckRecData::class.java)
             filesForm->search(FilesData::class.java)
             makepositionForm->search(MakePosition::class.java)
@@ -48,8 +51,60 @@ class NormalSearch:BaseSearchServlet() {
 
     }
 
+
+    private fun makePlanTask(){
+        val dayArray = getWeekStartAndEnd()
+        val sql = "select * from buildPlan"
+        val jdbc = JdbcUtils()
+        val set = jdbc.Query(sql)
+        if(!set.next()){
+            SendUtils.sendMsg(0,"没有数据",resp)
+            return
+        }
+        set.beforeFirst()
+        val listData = DBFromToObject.converToObjectArray(set,BuildPlan::class.java)
+        println("day0 ${dayArray[0].time}  day1 ${dayArray[1].time}")
+        val data = listData.filter {
+            println(it.getbFromDate().time)
+            val result = it.getbFromDate().time<=dayArray[1].time&&it.getbFromDate().time>=dayArray[0].time
+            println(result)
+            result
+        }
+        listData.forEach {
+            println(it.getbFromDate())
+        }
+        SendUtils.sendMsg(data.size,gson.toJson(data),resp)
+    }
+
+    private fun getDayDistanceMonDay(calendar: Calendar):Int{
+        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+        return if(dayOfWeek==1)
+            -6
+        else
+            2-dayOfWeek
+    }
+
+    private fun getWeekStartAndEnd():Array<Date>{
+        val date = java.util.Date(System.currentTimeMillis())
+        val calender = Calendar.getInstance()
+        calender.time = date
+        calender.firstDayOfWeek = Calendar.MONDAY
+        calender.add(Calendar.DAY_OF_WEEK,7)
+        val distance = getDayDistanceMonDay(calender)
+        calender.add(Calendar.DAY_OF_WEEK,distance)
+        val monday = calender.time
+        calender.add(Calendar.DAY_OF_WEEK,6)
+        val sunday = calender.time
+        return arrayOf(Date((monday.time/100000)*100000),Date((sunday.time/100000)*100000))
+    }
+
     private fun taskWithBeam(){
-        val sql = "select beam.* , task.* from beam,task where beam.bid = task.bid and beam.bName = task.bName"
+        var sql = ""
+        if(searchAll == "1")
+        {
+            sql = "select beam.* , task.* from beam,task where beam.bid = task.bid and beam.bName = task.bName and task.taskDate = '${Date(System.currentTimeMillis())}' "
+        }else
+            sql = "select beam.* , task.* from beam,task where beam.bid = task.bid and beam.bName = task.bName"
         val jdbc = JdbcUtils()
         val set = jdbc.Query(sql)
         if(!set.next()){

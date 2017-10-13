@@ -59,6 +59,7 @@ public class JdbcUtils {
         long s = -1;
         try
         {
+
             if(connection!=null&&statement!=null&&!statement.isClosed()&&!connection.isClosed())
                 s= statement.executeLargeUpdate(sql);
             else
