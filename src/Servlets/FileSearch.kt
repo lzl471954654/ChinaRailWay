@@ -16,6 +16,8 @@ class FileSearch:HttpServlet() {
     override fun service(req: HttpServletRequest?, resp: HttpServletResponse?) {
         var bId = req?.getParameter("bID")
         var bName = req?.getParameter("bName")
+        var all = req?.getParameter("all")
+        var type = req?.getParameter("type")
         resp?.contentType = "text/json;charset=UTF-8"
         if(!testParamNullOrEmpty(bId,bName)){
             SendUtils.sendParamError("bid or bName",resp)
@@ -25,7 +27,13 @@ class FileSearch:HttpServlet() {
         bId = URLDecoder.decode(bId,"UTF-8")
         bName = URLDecoder.decode(bName,"UTF-8")
 
-        val sql = "select * from files where bId = '$bId' and bName = '$bName'"
+        var sql = ""
+        if(all!=null&&all=="1")
+        {
+            sql = " select * from files where type = '$type' "
+        }
+        else
+            sql = "select * from files where bId = '$bId' and bName = '$bName'"
         val set = JdbcUtils().Query(sql)
         if (!set.next()){
             SendUtils.sendMsg(0,"No data",resp)

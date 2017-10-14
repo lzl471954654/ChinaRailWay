@@ -22,6 +22,7 @@ class FileUploadServlet:HttpServlet() {
 
         fileName = URLDecoder.decode(fileName,"UTF-8")
         bName = URLDecoder.decode(bName,"UTF-8")
+        bID = URLDecoder.decode(bID,"UTF-8")
 
         resp?.contentType = "text/json;charset=UTF-8"
 
@@ -35,7 +36,7 @@ class FileUploadServlet:HttpServlet() {
             SendUtils.sendParamError("FileType",resp)
             return
         }
-        filePath = filePath + File.separator + fileId + "." +fileSuffix
+        filePath = filePath + File.separator + fileName + "." +fileSuffix
         val file = File(filePath)
         println("filePath :\t"+file.absolutePath)
         if(!srcDirFile.exists())
