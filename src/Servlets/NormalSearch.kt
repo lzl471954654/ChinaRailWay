@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse
 @WebServlet(name = "NormalSearch",urlPatterns = arrayOf("/search"))
 class NormalSearch:BaseSearchServlet() {
     var type:String? = ""
+    var week:String? = ""
     lateinit var resp:HttpServletResponse
     override fun service(req: HttpServletRequest?, resp: HttpServletResponse?) {
         if(resp!=null)
@@ -41,8 +42,9 @@ class NormalSearch:BaseSearchServlet() {
             monthdataForm->search(MonthData::class.java)
             storeForm->search(StoreData::class.java)
             storepositionFrom->search(StorePositionData::class.java)
-            taskForm->search(TaskData::class.java)
-            "taskWithBeam"->taskWithBeam()
+            //taskForm->search(TaskData::class.java)
+            taskForm->{week = req?.getParameter("week");task(TaskData::class.java)}
+            "taskwithbeam"->taskWithBeam()
             else->{
                 SendUtils.sendParamError("FormTypeError",resp!!)
                 return
@@ -53,7 +55,7 @@ class NormalSearch:BaseSearchServlet() {
 
 
     private fun makePlanTask(){
-        val dayArray = getWeekStartAndEnd()
+        val dayArray = getWeekStartAndEndByCount(1)
         val sql = "select * from buildPlan"
         val jdbc = JdbcUtils()
         val set = jdbc.Query(sql)
@@ -84,23 +86,54 @@ class NormalSearch:BaseSearchServlet() {
             2-dayOfWeek
     }
 
-    private fun getWeekStartAndEnd():Array<Date>{
+    private fun getWeekStartAndEndByCount(count:Int):Array<Date>{
         val date = java.util.Date(System.currentTimeMillis())
         val calender = Calendar.getInstance()
         calender.time = date
         calender.firstDayOfWeek = Calendar.MONDAY
-        calender.add(Calendar.DAY_OF_WEEK,7)
+        calender.add(Calendar.DAY_OF_WEEK,7*count)
         val distance = getDayDistanceMonDay(calender)
         calender.add(Calendar.DAY_OF_WEEK,distance)
         val monday = calender.time
         calender.add(Calendar.DAY_OF_WEEK,6)
         val sunday = calender.time
         return arrayOf(Date((monday.time/100000)*100000),Date((sunday.time/100000)*100000))
+
+    }
+
+    private fun <T>task(clazz:Class<T>){
+        if(searchAll != "3"){
+            search(clazz)
+            return
+        }
+        val count:Int = if(week==null||week == ""){
+            0
+        }else{
+            var c = 0
+            try {
+                c = week!!.toInt()
+            }catch (e:Exception){
+                e.printStackTrace()
+            }
+            c
+        }
+        val date = getWeekStartAndEndByCount(count)
+        println("${date[0]}\t${date[1]}")
+        val sql = "select * from task where taskDate between '${date[0]}' and '${date[1]}'"
+        val jdbc = JdbcUtils()
+        val set = jdbc.Query(sql)
+        if(!set.next()){
+            SendUtils.sendMsg(0,"没有数据",resp)
+            return
+        }
+        set.beforeFirst()
+        val listData = DBFromToObject.converToObjectArray(set,TaskData::class.java)
+        SendUtils.sendMsg(listData.size, gson.toJson(listData),resp)
     }
 
     private fun taskWithBeam(){
         var sql = ""
-        if(searchAll == "1")
+        if(searchAll == "0")
         {
             sql = "select beam.* , task.* from beam,task where beam.bid = task.bid and beam.bName = task.bName and task.taskDate = '${Date(System.currentTimeMillis())}' "
         }else

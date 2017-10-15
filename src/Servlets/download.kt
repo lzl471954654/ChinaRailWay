@@ -2,6 +2,7 @@ package Servlets
 
 import Utils.SendUtils
 import java.io.File
+import java.net.URLDecoder
 import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
@@ -12,13 +13,14 @@ class download:HttpServlet() {
 
     override fun service(req: HttpServletRequest?, resp: HttpServletResponse?) {
         val type = req?.getParameter("type")
-        val fileName = req?.getParameter("fileName")
+        var fileName = req?.getParameter("fileName")
 
         if(!testParamNullOrEmpty(type,fileName)){
             SendUtils.sendParamError(" type or fileName",resp)
             return
         }
 
+        fileName = URLDecoder.decode(fileName,"UTF-8")
         var path:String? = null
         if(type == "image")
         {
