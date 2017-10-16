@@ -56,7 +56,7 @@ class NormalSearch:BaseSearchServlet() {
 
     private fun makePlanTask(){
         val dayArray = getWeekStartAndEndByCount(1)
-        val sql = "select * from buildPlan"
+        val sql = "select * from buildPlan where bFromDate <= '${dayArray[1]}' and bFromDate >= '${dayArray[0]}'"
         val jdbc = JdbcUtils()
         val set = jdbc.Query(sql)
         if(!set.next()){
@@ -66,7 +66,7 @@ class NormalSearch:BaseSearchServlet() {
         set.beforeFirst()
         val listData = DBFromToObject.converToObjectArray(set,BuildPlan::class.java)
         println("day0 ${dayArray[0].time}  day1 ${dayArray[1].time}")
-        val data = listData.filter {
+        /*val data = listData.filter {
             println(it.getbFromDate().time)
             val result = it.getbFromDate().time<=dayArray[1].time&&it.getbFromDate().time>=dayArray[0].time
             println(result)
@@ -74,8 +74,8 @@ class NormalSearch:BaseSearchServlet() {
         }
         listData.forEach {
             println(it.getbFromDate())
-        }
-        SendUtils.sendMsg(data.size,gson.toJson(data),resp)
+        }*/
+        SendUtils.sendMsg(listData.size,gson.toJson(listData),resp)
     }
 
     private fun getDayDistanceMonDay(calendar: Calendar):Int{
@@ -119,7 +119,7 @@ class NormalSearch:BaseSearchServlet() {
         }
         val date = getWeekStartAndEndByCount(count)
         println("${date[0]}\t${date[1]}")
-        val sql = "select * from task where taskDate between '${date[0]}' and '${date[1]}'"
+        val sql = "select * from task where taskDate >= '${date[0]}' and taskDate <= '${date[1]}'"
         val jdbc = JdbcUtils()
         val set = jdbc.Query(sql)
         if(!set.next()){
@@ -176,7 +176,7 @@ class NormalSearch:BaseSearchServlet() {
         }
         set.beforeFirst()
         val listData = DBFromToObject.converToObjectArray(set,clazz)
-        SendUtils.sendMsg(listData.size, Gson().toJson(listData),resp)
+        SendUtils.sendMsg(listData.size, gson.toJson(listData),resp)
     }
 
 

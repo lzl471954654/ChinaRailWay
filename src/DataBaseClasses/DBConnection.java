@@ -21,7 +21,7 @@ public class DBConnection {
      private static String user = "cradmin";
      private static String password = "HelloMySQL2017;";
      private static String url = "jdbc:mysql://47.95.217.16:3306/crbf";
-    private  Connection connection = null;
+    private static Connection connection = null;
     private static String tag = "DBConnection";
     static
     {
@@ -82,6 +82,8 @@ public class DBConnection {
     {
         try {
             if(connection==null)
+                initConnection();
+            else if(connection.isClosed())
                 initConnection();
         }catch (Exception e)
         {

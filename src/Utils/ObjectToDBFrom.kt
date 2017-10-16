@@ -1,12 +1,13 @@
 package Utils
 
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import java.math.BigDecimal
 import java.sql.Date
 
 object ObjectToDBFrom {
     @JvmStatic
-    val gson = Gson()
+    val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
     @JvmStatic
     fun convertToSQLInsertValues(srcObject : Any):String{
         val builder = StringBuilder()

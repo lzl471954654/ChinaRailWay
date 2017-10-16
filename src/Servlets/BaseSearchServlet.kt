@@ -3,6 +3,7 @@ package Servlets
 import DataClass.ResponseSingleData
 import DataClass.TokenMap
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import net.sf.json.JSONObject
 import java.net.URLDecoder
 import java.net.URLEncoder
@@ -37,7 +38,7 @@ open class BaseSearchServlet:HttpServlet() {
     }
 
     companion object {
-        val gson = Gson()
+        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
         val factoryForm = "factory"
         val buildPlanForm = "buildplan"
         val filesForm = "files"

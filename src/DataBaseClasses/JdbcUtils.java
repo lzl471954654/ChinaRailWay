@@ -111,7 +111,8 @@ public class JdbcUtils {
         {
             if(statement!=null)
                 statement.close();
-            dbConnection.closeConnection();
+            //dbConnection.closeConnection();
+            dbConnection = null;
             connection = null;
             statement = null;
         }
