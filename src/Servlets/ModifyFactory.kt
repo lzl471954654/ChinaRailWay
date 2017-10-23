@@ -16,6 +16,7 @@ class ModifyFactory:HttpServlet() {
 
     override fun doPost(req: HttpServletRequest?, resp: HttpServletResponse?) {
         var data = req?.getParameter("data")
+        req?.getPart("file")
         if(!testParamNullOrEmpty(data)){
             SendUtils.sendMsg(-1,"data",resp)
             return
@@ -48,24 +49,9 @@ class ModifyFactory:HttpServlet() {
                 file.mkdir()
             }
             dir = dir+File.separator+"${dataObject.name}.jpg"
-            file = File(dir)
-            if(file.exists()){
-                file.delete()
-                file.createNewFile()
-            }
-            var out = file.outputStream()
-            var input = req!!.inputStream
-            val bytes = ByteArray(4096)
-            var count: Int
-            while(true){
-                count = input.read(bytes)
-                if(count==-1){
-                    break
-                }
-                out.write(bytes,0,count)
-            }
-            out.flush()
-            out.close()
+            //file = File(dir)
+            val part = req?.getPart("file")
+            part?.write(dir)
             SendUtils.sendMsg(result.toInt(),"成功",resp)
         }else{
             SendUtils.sendMsg(-1,"失败",resp)

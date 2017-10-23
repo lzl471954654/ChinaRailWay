@@ -93,9 +93,9 @@ class FileUploadServlet:HttpServlet() {
     }
 
     companion object {
-        val srcRoot = "/accept"
-        val imageDirPath = "$srcRoot/images"
-        val videoDirPath = "$srcRoot/video"
+        const val srcRoot = "/accept"
+        const val imageDirPath = "$srcRoot/images"
+        const val videoDirPath = "$srcRoot/video"
 
         val srcDirFile = File(srcRoot)
         val imageDirFile = File(imageDirPath)
