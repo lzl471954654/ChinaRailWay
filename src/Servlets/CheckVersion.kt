@@ -17,7 +17,6 @@ class CheckVersion:HttpServlet() {
         val url = proFile.getProperty("url")
         val json = JSONObject()
         json.put("version",version)
-        json.put("url",url)
         resp?.writer?.println(json.toString())
     }
 }
