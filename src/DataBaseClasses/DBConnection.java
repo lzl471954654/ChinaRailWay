@@ -15,12 +15,12 @@ import java.util.Properties;
 public class DBConnection {
     private  static String DB_Driver = "com.mysql.jdbc.Driver";
     //private static String url = "jdbc:mysql://222.24.63.119:3306/crbf";
-    /*private static String url = "jdbc:mysql://127.0.0.1:3306/crbf";
-    private static String user = "root";
+    private static String url = "jdbc:mysql://127.0.0.1:3306/crbf";
+    /*private static String user = "root";
     private static String password = "lzl471954654";*/
      private static String user = "cradmin";
      private static String password = "HelloMySQL2017;";
-     private static String url = "jdbc:mysql://47.95.217.16:3306/crbf";
+     //private static String url = "jdbc:mysql://47.95.217.16:3306/crbf";
     private static Connection connection = null;
     private static String tag = "DBConnection";
     static

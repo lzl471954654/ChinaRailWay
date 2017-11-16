@@ -76,6 +76,7 @@ class NormalSearch:BaseSearchServlet() {
             println(it.getbFromDate())
         }*/
         SendUtils.sendMsg(listData.size,gson.toJson(listData),resp)
+        jdbc.releaseResource()
     }
 
     private fun getDayDistanceMonDay(calendar: Calendar):Int{
@@ -129,6 +130,7 @@ class NormalSearch:BaseSearchServlet() {
         set.beforeFirst()
         val listData = DBFromToObject.converToObjectArray(set,TaskData::class.java)
         SendUtils.sendMsg(listData.size, gson.toJson(listData),resp)
+        jdbc.releaseResource()
     }
 
     private fun taskWithBeam(){
@@ -147,6 +149,7 @@ class NormalSearch:BaseSearchServlet() {
         set.beforeFirst()
         val listData = DBFromToObject.converToObjectArray(set,TaskWithBeam::class.java)
         SendUtils.sendMsg(listData.size, gson.toJson(listData),resp)
+        jdbc.releaseResource()
     }
 
     fun <T>search(clazz:Class<T>){
@@ -164,6 +167,7 @@ class NormalSearch:BaseSearchServlet() {
         set.beforeFirst()
         val listData = DBFromToObject.converToObjectArray(set,clazz)
         SendUtils.sendMsg(listData.size,gson.toJson(listData),resp)
+        jdbc.releaseResource()
     }
 
     fun <T>searchAllInfo(clazz: Class<T>){
@@ -177,6 +181,7 @@ class NormalSearch:BaseSearchServlet() {
         set.beforeFirst()
         val listData = DBFromToObject.converToObjectArray(set,clazz)
         SendUtils.sendMsg(listData.size, gson.toJson(listData),resp)
+        jdbc.releaseResource()
     }
 
 

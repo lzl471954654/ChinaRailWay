@@ -24,9 +24,9 @@ public class LoginServlet extends HttpServlet {
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String uid = req.getParameter("uid");
         String pwd = req.getParameter("pwd");
+        JdbcUtils jdbcUtils = new JdbcUtils();
         try{
             ResultSet set = null;
-            JdbcUtils jdbcUtils = new JdbcUtils();
             String sql = "select * from users where uid = '"+uid+"' and pwd = '"+pwd+"'";
             set = jdbcUtils.Query(sql);
             JSONObject object;
@@ -73,6 +73,8 @@ public class LoginServlet extends HttpServlet {
             LogUtils.logException(getClass().getName(),e.getMessage()+"");
             ResponseSingleData<String> data = new ResponseSingleData<>(0,"Exception"+e.getMessage());
             resp.getWriter().println(JSONObject.fromObject(data).toString());
+        }finally {
+            jdbcUtils.releaseResource();
         }
     }
 }
