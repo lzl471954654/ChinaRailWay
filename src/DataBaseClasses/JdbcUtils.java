@@ -20,6 +20,8 @@ public class JdbcUtils {
     {
         try
         {
+            if(dbConnection == null)
+                dbConnection = new DBConnection();
             connection = dbConnection.getConnection();
             statement = connection.createStatement();
         }
@@ -27,6 +29,9 @@ public class JdbcUtils {
         {
             e.printStackTrace();
             System.out.println("JDBCUtils ERROR　SQL");
+        }catch (NullPointerException e){
+            e.printStackTrace();
+            System.out.println("jdbc init catch NPE");
         }
     }
 
@@ -112,7 +117,7 @@ public class JdbcUtils {
             if(statement!=null)
                 statement.close();
             //dbConnection.closeConnection();
-            dbConnection = null;
+            //dbConnection = null;
             connection = null;
             statement = null;
         }

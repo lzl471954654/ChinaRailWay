@@ -19,12 +19,13 @@ class ModifyTask:HttpServlet() {
         var count = 0
         val jdbc = JdbcUtils()
         tasks.forEach {
-            val sql = " update task set bName = '${it.getbName()}' , bID = '${it.getbID()}' , makeOrder = '${it.makeOrder}' , makePosID = '${it.makePosId}', pedID = '${it.pedID}', pos = '${it.pos}',permit = '${if(it.isPermit) 1 else 0}'  where taskdate = '${it.taskDate}'"
+            val sql = " update task set makeOrder = '${it.makeOrder}' , permit = '${if(it.isPermit) 1 else 0}'  where taskdate = '${it.taskDate}' and bName = '${it.getbName()}' and bID = '${it.getbID()}' "
             println(sql)
             val res = jdbc.update(sql)
             if(res==1L)
                 count++
         }
+        resp?.contentType = "text/json;charset=UTF-8"
         SendUtils.sendMsg(count,"",resp)
         jdbc.releaseResource()
     }

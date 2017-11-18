@@ -6,22 +6,26 @@ import Utils.SendUtils
 import com.google.gson.GsonBuilder
 import java.io.File
 import java.net.URLDecoder
+import javax.servlet.annotation.MultipartConfig
 import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @WebServlet(name = "factoryModify",urlPatterns = arrayOf("/factoryModify"))
+@MultipartConfig(maxFileSize = 10*1024*1024)
 class ModifyFactory:HttpServlet() {
 
     override fun doPost(req: HttpServletRequest?, resp: HttpServletResponse?) {
         var data = req?.getParameter("data")
-        req?.getPart("file")
+        //req?.getPart("file")
+        resp?.contentType = "text/json;charset=UTF-8"
         if(!testParamNullOrEmpty(data)){
             SendUtils.sendMsg(-1,"data",resp)
             return
         }
         data = URLDecoder.decode(data,"UTF-8")
+        println("data: $data")
         val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
         val dataObject = gson.fromJson(data,FactoryData::class.java)
         val fileName = dataObject.name +".jpg"
@@ -43,7 +47,7 @@ class ModifyFactory:HttpServlet() {
         val jdbc = JdbcUtils()
         val result:Long = jdbc.update(sql)
         if(result>0){
-            var dir = FileUploadServlet.srcRoot+ File.separator+"factoryImage"
+            var dir = FileUploadServlet.srcDirFile.absolutePath + File.separator+"factoryImage"
             var file = File(dir)
             if(!file.exists()){
                 file.mkdir()

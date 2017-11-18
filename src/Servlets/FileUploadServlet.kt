@@ -96,6 +96,7 @@ class FileUploadServlet:HttpServlet() {
         const val srcRoot = "/accept"
         const val imageDirPath = "$srcRoot/images"
         const val videoDirPath = "$srcRoot/video"
+        const val factoryImagePath = "$srcRoot/factoryImage"
 
         val srcDirFile = File(srcRoot)
         val imageDirFile = File(imageDirPath)
