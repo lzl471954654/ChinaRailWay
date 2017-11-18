@@ -5,6 +5,7 @@ import DataClass.FactoryData
 import Utils.SendUtils
 import com.google.gson.GsonBuilder
 import java.io.File
+import java.io.FileOutputStream
 import java.net.URLDecoder
 import javax.servlet.annotation.MultipartConfig
 import javax.servlet.annotation.WebServlet
@@ -13,12 +14,11 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @WebServlet(name = "factoryModify",urlPatterns = arrayOf("/factoryModify"))
-@MultipartConfig(maxFileSize = 10*1024*1024)
 class ModifyFactory:HttpServlet() {
 
     override fun doPost(req: HttpServletRequest?, resp: HttpServletResponse?) {
         var data = req?.getParameter("data")
-        //req?.getPart("file")
+
         resp?.contentType = "text/json;charset=UTF-8"
         if(!testParamNullOrEmpty(data)){
             SendUtils.sendMsg(-1,"data",resp)
@@ -53,9 +53,17 @@ class ModifyFactory:HttpServlet() {
                 file.mkdir()
             }
             dir = dir+File.separator+"${dataObject.name}.jpg"
-            //file = File(dir)
-            val part = req?.getPart("file")
-            part?.write(dir)
+            val image = File(dir)
+            val input = req!!.inputStream
+            val out = FileOutputStream(image)
+            val bytes = ByteArray(4096)
+            while (true){
+                val count = input.read(bytes)
+                if(count==-1)
+                    break
+                out.write(bytes,0,count)
+            }
+            out.close()
             SendUtils.sendMsg(result.toInt(),"成功",resp)
         }else{
             SendUtils.sendMsg(-1,"失败",resp)
@@ -64,5 +72,12 @@ class ModifyFactory:HttpServlet() {
 
     override fun doGet(req: HttpServletRequest?, resp: HttpServletResponse?) {
         SendUtils.sendMsg(-1,"Do not support Get Request!",resp)
+
+        val stringArray = Array<Int>(10,init = {
+            i ->
+            1
+        })
+
+        val stringArrays = arrayOf<String>()
     }
 }
