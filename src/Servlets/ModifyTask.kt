@@ -18,6 +18,7 @@ class ModifyTask:HttpServlet() {
         val tasks = BaseSearchServlet.gson.fromJson(data,Array<TaskData>::class.java)
         var count = 0
         val jdbc = JdbcUtils()
+
         tasks.forEach {
             val sql = " update task set makeOrder = '${it.makeOrder}' , permit = '${if(it.isPermit) 1 else 0}'  where taskdate = '${it.taskDate}' and bName = '${it.getbName()}' and bID = '${it.getbID()}' "
             println(sql)

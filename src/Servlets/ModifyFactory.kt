@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletResponse
 class ModifyFactory:HttpServlet() {
 
     override fun doPost(req: HttpServletRequest?, resp: HttpServletResponse?) {
-        var data = req?.getParameter("data")
-
+        //val data = req?.getParameter("data")
+        var data = req?.getHeader("data")
         resp?.contentType = "text/json;charset=UTF-8"
         if(!testParamNullOrEmpty(data)){
             SendUtils.sendMsg(-1,"data",resp)
@@ -72,12 +72,5 @@ class ModifyFactory:HttpServlet() {
 
     override fun doGet(req: HttpServletRequest?, resp: HttpServletResponse?) {
         SendUtils.sendMsg(-1,"Do not support Get Request!",resp)
-
-        val stringArray = Array<Int>(10,init = {
-            i ->
-            1
-        })
-
-        val stringArrays = arrayOf<String>()
     }
 }

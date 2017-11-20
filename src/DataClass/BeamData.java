@@ -44,8 +44,17 @@ public class BeamData {
     short casts;
     short stretch;
     short grouting;
+    short find;
 
     public BeamData(){}
+
+    public short getFind() {
+        return find;
+    }
+
+    public void setFind(short find) {
+        this.find = find;
+    }
 
     public String getbName() {
         return bName;
