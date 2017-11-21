@@ -1,7 +1,7 @@
 # ChinaRailWay后台接口文档
 
 ## 一级URL
-url：http://139.199.20.248:8080/ChinaRailWay
+url：http://47.95.217.16/ChinaRailWay
 
 **注意：接口中所有包含中文的参数，提交前请使用URLEncoder进行编码，编码格式UTF-8**
 
@@ -539,7 +539,7 @@ data是一个Array
 
 参数名 | 类型 | 示例 | 说明|
 -------|------|------|-----|
-type| String |image或video|文件类型 image图片，video视频|
+type| String |image或video或factoryImage|文件类型 image普通图片，video视频，或者梁场图片（factoryImage）|
 fileName| String|xxx.jpg| 文件名 |
 
 fileName 文件名，需要通过使用文件查询接口，查询结果中的文件名才可以获取文件
@@ -566,3 +566,124 @@ bName | String ||桥名|
 -------|------|------|-----|
 code | int || 1成功，其他失败|
 data |  String| |错误信息|
+
+
+## 十一、梁场信息修改
+#### 请求方式：POST
+#### URL：url/factoryModify
+#### 请求参数
+
+参数名 | 类型 | 示例 | 说明|
+-------|------|------|-----|
+data| String ||修改后的梁场类json格式数据|
+
+在Body中上传梁场的图片文件
+
+data数据示例
+```json
+{
+    "ability": 23333, 
+    "addr": "梁场1", 
+    "begin": "2017-10-04", 
+    "build": "制梁区", 
+    "builder": "小张", 
+    "code": "23", 
+    "distance": "1", 
+    "end": "大里程", 
+    "finish": "2017-10-18", 
+    "highWarn": 23, 
+    "intro": "中铁一局三司梁场寄卡升级客户接口", 
+    "lowWarn": 4.7, 
+    "maker": "施工单位", 
+    "manager": "梁场主", 
+    "name": "中铁一局三司梁场", 
+    "part3": "第三方监理", 
+    "phone": "12345678910", 
+    "plan": "HupuBBS_171031113217-1242822577.png", 
+    "project": "项目1", 
+    "segment": "标段1", 
+    "start": "小里程", 
+    "store": "存梁区", 
+    "superUnit": "监理单位", 
+    "supervisor": "小吴", 
+    "title": "第一场长", 
+    "totalProd": 23
+}
+```
+
+#### 返回参数
+
+参数名 | 类型 | 示例 | 说明|
+-------|------|------|-----|
+code | int || 大于等于1成功，其他失败|
+data |  String| |错误信息|
+
+
+## 十二、批量修改生产任务
+#### 请求方式：POST
+#### URL：url/modifyTask
+#### 请求参数	
+
+参数名 | 类型 | 示例 | 说明|
+-------|------|------|-----|
+data| String ||TaskData类数组json格式数据|
+
+#### 返回参数
+参数名 | 类型 | 示例 | 说明|
+-------|------|------|-----|
+code | int || 代表成功修改的条目数，0为修改失败没有一条成功|
+data |  String| |错误信息|
+
+示例
+```json
+//code值代表成功修改的条数，0为没有一条修改成功
+{"code":2,"data":""}
+或
+{"code":0,"data":""}
+```
+
+## 十三、批量修改架梁计划
+#### 请求方式：POST
+#### URL：url/modifyBuildPlan
+#### 请求参数	
+
+参数名 | 类型 | 示例 | 说明|
+-------|------|------|-----|
+data| String ||BuildPlan类数组json格式数据|
+
+#### 返回参数
+参数名 | 类型 | 示例 | 说明|
+-------|------|------|-----|
+code | int || 代表成功修改的条目数，0为修改失败没有一条成功|
+data |  String| |错误信息|
+
+示例
+```json
+//code值代表成功修改的条数，0为没有一条修改成功
+{"code":2,"data":""}
+或
+{"code":0,"data":""}
+```
+
+<br>
+## 十四、版本检查
+#### 请求方式：GET
+#### URL：url/checkVersion
+#### 请求参数：无
+#### 返回参数
+参数名 | 类型 | 示例 | 说明|
+-------|------|------|-----|
+version | String |1.5| 版本号|
+
+#### 示例
+```json
+{"version":"1.5"}
+```
+
+## 十五、下载APK
+#### 请求方式：GET
+#### URL：url/getAPK
+#### 请求参数：无
+#### 返回参数：无
+
+通过此链接可以直接获得最新版本的APK安装文件
