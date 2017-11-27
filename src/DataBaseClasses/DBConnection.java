@@ -3,7 +3,9 @@ package DataBaseClasses;
 import Utils.LogUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -14,20 +16,24 @@ import java.util.Properties;
  */
 public class DBConnection {
     private  static String DB_Driver = "com.mysql.jdbc.Driver";
-    //private static String url = "jdbc:mysql://222.24.63.119:3306/crbf";
-    private static String url = "jdbc:mysql://127.0.0.1:3306/crbf";
-    /*private static String user = "root";
-    private static String password = "lzl471954654";*/
-     private static String user = "cradmin";
-     private static String password = "HelloMySQL2017;";
-     //private static String url = "jdbc:mysql://47.95.217.16:3306/crbf";
     private static Connection connection = null;
     private static String tag = "DBConnection";
+    private static String url;
+    private static String user;
+    private static String password;
     static
     {
         LogUtils.initLog();
         try
         {
+            Properties properties = new Properties();
+            File file = new File("/WEB-INF/db.properties");
+            properties.load(new FileReader(file));
+            url = properties.getProperty("url");
+            user = properties.getProperty("user");
+            password = properties.getProperty("password");
+
+
             Class.forName(DB_Driver);
             System.out.println("JDBC驱动加载成功！");
             logInfo("JDBC驱动加载成功！");
@@ -37,18 +43,20 @@ public class DBConnection {
             e.printStackTrace();
             System.out.println("JDBC驱动加载失败！");
             logInfo("JDBC驱动加载失败！");
+        }catch (IOException e){
+            e.printStackTrace();
         }
     }
 
 
-    public static void logInfo(String msg){
+    private static void logInfo(String msg){
         LogUtils.logInfo(tag,msg);
     }
-    public static void logException(String msg){
+    private static void logException(String msg){
         LogUtils.logException(tag,msg);
     }
 
-    public void initConnection()
+    private void initConnection()
     {
         try
         {
@@ -67,7 +75,7 @@ public class DBConnection {
         }
     }
 
-    public void reConnected()
+    private void reConnected()
     {
        try {
            System.out.println("重新连接数据库中");
