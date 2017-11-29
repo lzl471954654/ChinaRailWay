@@ -31,7 +31,7 @@ class ChangeBeamStatus : HttpServlet() {
             SendUtils.sendParamError("type", resp)
             return
         }
-        val simpleDataFormatter = SimpleDateFormat("YYYY-MM-dd HH:mm:SS")
+        val simpleDataFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val jdbc = JdbcUtils()
         var buildSQL = "select * from ${BaseSearchServlet.taskForm} where bid = '$beamId' and BName = '$bName' "
         var result = jdbc.Query(buildSQL)

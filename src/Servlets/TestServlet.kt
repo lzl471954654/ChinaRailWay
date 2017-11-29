@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-@WebServlet(name = "test",urlPatterns = ["/test"])
+//@WebServlet(name = "test",urlPatterns = ["/test"])
 class TestServlet : HttpServlet(){
 
     override fun service(req: HttpServletRequest?, resp: HttpServletResponse?) {

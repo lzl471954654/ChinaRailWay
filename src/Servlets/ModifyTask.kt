@@ -134,8 +134,9 @@ class ModifyTask:HttpServlet() {
             {
                 count++
                 if(it.isPermit){
-                    sql = " update beam set status = ‘制作中’ where bName = '${it.getbName()}' and bID = '${it.getbID()}'"
-                    jdbc.update(sql)
+                    sql = " update beam set status = '制作中' where bName = '${it.getbName()}' and bID = '${it.getbID()}'"
+                    val result = jdbc.update(sql)
+                    println("update beam result is $result the query is : $sql")
                 }
             }
         }
