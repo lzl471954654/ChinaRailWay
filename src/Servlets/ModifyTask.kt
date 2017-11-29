@@ -107,6 +107,7 @@ class ModifyTask:HttpServlet() {
         var i = 0
         while (resultSet.next()){
             resultSet.updateDate(1,Date(calender.timeInMillis))
+            resultSet.updateRow()
             i++
             if(i == ability){
                 calender.add(Calendar.DATE,1)

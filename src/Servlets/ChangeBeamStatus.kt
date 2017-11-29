@@ -17,20 +17,23 @@ class ChangeBeamStatus : HttpServlet() {
 
     override fun service(req: HttpServletRequest?, resp: HttpServletResponse?) {
         var type = req?.getParameter("type")
-        val beamId = req?.getParameter("beamId")
-        val bName = req?.getParameter("bName")
+        var beamId = req?.getParameter("beamId")
+        var bName = req?.getParameter("bName")
         if (!testParamNullOrEmpty(type, beamId,bName)) {
             SendUtils.sendParamError("null", resp)
             return
         }
         type = URLDecoder.decode(type, "UTF-8")
+        beamId = URLDecoder.decode(beamId,"UTF-8")
+        bName = URLDecoder.decode(bName,"UTF-8")
+
         if (type != inFactory && type != outFactory) {
             SendUtils.sendParamError("type", resp)
             return
         }
         val simpleDataFormatter = SimpleDateFormat("YYYY-MM-dd HH:mm:SS")
         val jdbc = JdbcUtils()
-        var buildSQL = "select * from ${BaseSearchServlet.taskForm} where bid = '$beamId'"
+        var buildSQL = "select * from ${BaseSearchServlet.taskForm} where bid = '$beamId' and BName = '$bName' "
         var result = jdbc.Query(buildSQL)
         if (result.next()){
             val plan = DBFromToObject.convertToObject(result,TaskData::class.java)
@@ -52,8 +55,8 @@ class ChangeBeamStatus : HttpServlet() {
                 * 更新 存梁台的状态 设置为空闲
                 * 更新 库存记录 的出场时间为当前时间
                 * */
-                sql = " update ${BaseSearchServlet.storepositionFrom} set status = $empty where pedId = '${plan.pedID}' and pos = '${plan.pos}'"
-                changeStoreSQL = " update ${BaseSearchServlet.storeForm} set outTime = '${simpleDataFormatter.format(Date(System.currentTimeMillis()))}' where bName = $bName and bId = $beamId "
+                sql = " update ${BaseSearchServlet.storepositionFrom} set status = '$empty' where pedId = '${plan.pedID}' and pos = '${plan.pos}'"
+                changeStoreSQL = " update ${BaseSearchServlet.storeForm} set outTime = '${simpleDataFormatter.format(Date(System.currentTimeMillis()))}' where bName = '$bName' and bId = '$beamId' "
                 changeBeamSQL = " update ${BaseSearchServlet.beamForm} set status = '已出场' where bName = '$bName' and bId = '$beamId'"
             }
             var resultCode = jdbc.update(sql)
