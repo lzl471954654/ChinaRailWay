@@ -1,6 +1,7 @@
 package DataBaseClasses;
 
 import Utils.LogUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.util.Properties;
 
 /**
@@ -18,21 +20,21 @@ public class DBConnection {
     private  static String DB_Driver = "com.mysql.jdbc.Driver";
     private static Connection connection = null;
     private static String tag = "DBConnection";
-    private static String url;
-    private static String user;
-    private static String password;
+    //private static String url = "jdbc:mysql://47.95.217.16:3306/crbf";
+    private static String url = "jdbc:mysql://127.0.0.1:3306/crbf";
+    private static String user = "cradmin";
+    private static String password = "HelloMySQL2017;";
     static
     {
         LogUtils.initLog();
         try
         {
-            Properties properties = new Properties();
+            /*Properties properties = new Properties();
             File file = new File("/WEB-INF/db.properties");
             properties.load(new FileReader(file));
-            url = properties.getProperty("url");
+            url = properties.getProperty("backURL");
             user = properties.getProperty("user");
-            password = properties.getProperty("password");
-
+            password = properties.getProperty("password");*/
 
             Class.forName(DB_Driver);
             System.out.println("JDBC驱动加载成功！");
@@ -43,8 +45,6 @@ public class DBConnection {
             e.printStackTrace();
             System.out.println("JDBC驱动加载失败！");
             logInfo("JDBC驱动加载失败！");
-        }catch (IOException e){
-            e.printStackTrace();
         }
     }
 
@@ -99,6 +99,12 @@ public class DBConnection {
         }
         return connection;
     }
+
+    @Nullable
+    public static Connection getNewConnection() throws SQLException {
+        return DriverManager.getConnection(url,user,password);
+    }
+
     public void closeConnection()
     {
         try

@@ -1,6 +1,7 @@
 package DataClass;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 public class BeamData {
     String bName;
@@ -44,15 +45,15 @@ public class BeamData {
     short casts;
     short stretch;
     short grouting;
-    short find;
+    Timestamp find;
 
     public BeamData(){}
 
-    public short getFind() {
+    public Timestamp getFind() {
         return find;
     }
 
-    public void setFind(short find) {
+    public void setFind(Timestamp find) {
         this.find = find;
     }
 
