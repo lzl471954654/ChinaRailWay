@@ -24,22 +24,24 @@ class ChangeBeamStatus : HttpServlet() {
             return
         }
         type = URLDecoder.decode(type, "UTF-8")
-        beamId = URLDecoder.decode(beamId,"UTF-8")
-        bName = URLDecoder.decode(bName,"UTF-8")
-
         if (type != inFactory && type != outFactory) {
             SendUtils.sendParamError("type", resp)
             return
         }
-        val simpleDataFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+
+        beamId = URLDecoder.decode(beamId,"UTF-8")
+        bName = URLDecoder.decode(bName,"UTF-8")
+
+        val simpleDataFormatter = SimpleDateFormat("YYYY-MM-dd HH:mm:ss")
         val jdbc = JdbcUtils()
-        var buildSQL = "select * from ${BaseSearchServlet.taskForm} where bid = '$beamId' and BName = '$bName' "
+        var buildSQL = "select * from ${BaseSearchServlet.taskForm} where bid = '$beamId' "
         var result = jdbc.Query(buildSQL)
         if (result.next()){
             val plan = DBFromToObject.convertToObject(result,TaskData::class.java)
             var sql = ""
             var changeStoreSQL = ""
             var changeBeamSQL = ""
+            var changeStorePosition:String = ""
             if(type == inFactory){
                 /*
                 * 梁板入场
@@ -49,6 +51,7 @@ class ChangeBeamStatus : HttpServlet() {
                 sql = " update ${BaseSearchServlet.makepositionForm} set Idle = '${1}' where makePosID = '${plan.makePosId}'"
                 changeStoreSQL = " insert into ${BaseSearchServlet.storeForm} values ( '$bName' , '$beamId' , '${plan.pedID}' , '${plan.pos}' , '${simpleDataFormatter.format(Date(System.currentTimeMillis()))}' , null )"
                 changeBeamSQL = " update ${BaseSearchServlet.beamForm} set status = '已入场' where bName = '$bName' and bId = '$beamId'"
+                changeStorePosition = " update ${BaseSearchServlet.storepositionFrom} set status = '$using' where pedId = '${plan.pedID}' and pos = '${plan.pos}' "
             }else{
                 /*
                 * 梁板出场
@@ -62,6 +65,9 @@ class ChangeBeamStatus : HttpServlet() {
             var resultCode = jdbc.update(sql)
             resultCode = if(resultCode==1L){
                 if (jdbc.update(changeStoreSQL)==1L){
+                    if(type == inFactory){
+                        jdbc.update(changeStorePosition)
+                    }
                     jdbc.update(changeBeamSQL)
                 }else
                     -1
@@ -81,5 +87,6 @@ class ChangeBeamStatus : HttpServlet() {
         val inFactory = "已入库"
         val outFactory = "已出库"
         val empty = "空闲"
+        val using = "使用中"
     }
 }

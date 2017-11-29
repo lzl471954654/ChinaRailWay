@@ -101,23 +101,23 @@ class ModifyTask:HttpServlet() {
             connection.close()
             return
         }
-        var date = tasks[0].taskDate
-        val calender = Calendar.getInstance()
-        calender.time = date
-        var i = 0
-        while (resultSet.next()){
-            resultSet.updateDate(1,Date(calender.timeInMillis))
-            resultSet.updateRow()
-            i++
-            if(i == ability){
-                calender.add(Calendar.DATE,1)
-                i = 0
-            }
+    var date = tasks[0].taskDate
+    val calender = Calendar.getInstance()
+    calender.time = date
+    var i = 0
+    while (resultSet.next()){
+        resultSet.updateDate(1,Date(calender.timeInMillis))
+        resultSet.updateRow()
+        i++
+        if(i == ability){
+            calender.add(Calendar.DATE,1)
+            i = 0
         }
-        SendUtils.sendMsg(1,"successful",resp)
-        state.close()
-        connection.close()
     }
+    SendUtils.sendMsg(1,"successful",resp)
+    state.close()
+    connection.close()
+}
 
     /*override fun service(req: HttpServletRequest?, resp: HttpServletResponse?) {
         var data = req!!.getParameter("data")
