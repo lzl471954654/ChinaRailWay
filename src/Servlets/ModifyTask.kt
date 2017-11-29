@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse
 class ModifyTask:HttpServlet() {
 
     override fun service(req: HttpServletRequest?, resp: HttpServletResponse?) {
+        System.getProperties().setProperty("file.encoding","UTF-8");
         var data = req!!.getParameter("data")
         val commite = req.getParameter("commite")
 
