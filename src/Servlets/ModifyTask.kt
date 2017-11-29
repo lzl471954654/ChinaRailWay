@@ -19,12 +19,15 @@ class ModifyTask:HttpServlet() {
 
     override fun service(req: HttpServletRequest?, resp: HttpServletResponse?) {
         var data = req!!.getParameter("data")
+        val commite = req.getParameter("commite")
+
         if (!testParamNullOrEmpty(data)){
             SendUtils.sendParamError("data",resp)
             return
         }
         data = URLDecoder.decode(data,"UTF-8")
         val tasks = BaseSearchServlet.gson.fromJson(data,Array<TaskData>::class.java)
+        println("first TaskDate is ${tasks[0].taskDate}")
         var count = 0
         val connection = DBConnection.getNewConnection()
         if(connection==null){
@@ -51,24 +54,35 @@ class ModifyTask:HttpServlet() {
             if(res==1L){
 
                 if(it.isPermit){
-                    sql = " update beam set status = ‘制作中’ where bName = '${it.getbName()}' and bID = '${it.getbID()}' "
-                    res = state.executeLargeUpdate(sql)
-                    if(res == 1L){
+                    res = state.executeLargeUpdate("update Beam set status ='制作中' where bName = '${it.getbName()}' and bID = '${it.getbID()}' ")
+                        if(res == 1L){
                         count++
                     }else{
                         flag = true
-                        SendUtils.sendMsg(-4,"update failed",resp)
-                        connection.rollback(point)
-                        state.close()
-                        connection.close()
                         return@forEach
                     }
                 }
             }
         }
-        if(flag)
+        if(commite == "1"){
+            SendUtils.sendMsg(1,"update ok",resp)
+            state.close()
+            connection.close()
             return
-        val resultSet = state.executeQuery("select * from task where TaskDate = ${tasks[0].taskDate} order by makeOrder")
+        }
+        if(flag)
+        {
+            SendUtils.sendMsg(-4,"update failed",resp)
+            connection.rollback(point)
+            state.close()
+            connection.close()
+            return
+        }
+        /**
+         * 参数中的 '' 是英文的
+         * */
+        val resultSet = state.executeQuery("select * from task where TaskDate = '${tasks[0].taskDate}'  order by makeOrder")
+
         resultSet.last()
         val countSum = resultSet.row
         if(countSum == 0)
