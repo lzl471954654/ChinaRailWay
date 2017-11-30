@@ -56,7 +56,8 @@ class ModifyTask:HttpServlet() {
 
                 if(it.isPermit){
                     res = state.executeLargeUpdate("update Beam set status ='制作中' where bName = '${it.getbName()}' and bID = '${it.getbID()}' ")
-                        if(res == 1L){
+                    state.executeLargeUpdate("update makePosition set idle = '0' where makePosID = '${it.makePosId}' ")
+                    if(res == 1L){
                         count++
                     }else{
                         flag = true
