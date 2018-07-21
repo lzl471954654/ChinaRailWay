@@ -666,11 +666,13 @@ data |  String| |错误信息|
 ```
 
 <br>
+
 ## 十四、版本检查
 #### 请求方式：GET
 #### URL：url/checkVersion
 #### 请求参数：无
 #### 返回参数
+
 参数名 | 类型 | 示例 | 说明|
 -------|------|------|-----|
 version | String |1.5| 版本号|
@@ -687,3 +689,47 @@ version | String |1.5| 版本号|
 #### 返回参数：无
 
 通过此链接可以直接获得最新版本的APK安装文件
+
+## 十六、删除生产计划
+#### 请求方式：GET、POST
+#### URL：url/removePlan
+#### 请求参数
+
+名称|解释|
+-------|------|
+|data| TaskData类的JSON字符串|
+
+data数据例子
+
+```json
+{
+    "taskDate": "2018-08-08",
+    "bName": "黄扁沟中桥",
+    "bID": "左幅3-4",
+    "MakeOrder": "14",
+    "MakePosID": 16,
+    "PedID": 9,
+    "Pos": "4上"
+}
+```
+
+**注意**
+
+taskDate 、bName 、bID 为主键参数，不能为空必须有，且必须正确
+
+MakeOrder 、 MakePosID 、 PedID 、 Pos 四个参数随意 可以为NULL 或者任意值
+
+#### 返回参数
+
+名称|解释|
+-----|-----|
+code| 状态码|
+msg|具体信息|
+
+code
+
+- 0 删除失败
+- 1 删除成功
+- -1 参数不足
+- -2 参数不正确，找不到记录
+
